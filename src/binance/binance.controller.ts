@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { Trade } from 'ccxt';
 import * as moment from 'moment';
 import { BinanceService } from './binance.service';
@@ -8,7 +8,7 @@ export class BinanceController {
   constructor(private readonly binanceService: BinanceService) {}
 
   @Get('spot-and-flex')
-  async getSpotAndFlexBalance(): Promise<any> {
+  async getSpotAndFlexBalance(): Promise<Map<string, number>> {
     const res = await this.binanceService.getSpotAndFlexBalance();
     return res;
   }
@@ -17,7 +17,7 @@ export class BinanceController {
   async getMyTradeHistory(
     @Query('symbol') symbol: string,
     @Query('since') since: string,
-    @Query('to') to: number,
+    @Query('to') to: string,
     @Query('limit') limit: number,
   ): Promise<Trade[]> {
     const sinceMiliSec = moment(since).valueOf();

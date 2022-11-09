@@ -1,8 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cron } from '@nestjs/schedule';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as ccxt from 'ccxt';
 import * as moment from 'moment';
+import { Trade } from 'src/trade/trade.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class BinanceService {
@@ -10,7 +13,13 @@ export class BinanceService {
   public config: ConfigService;
   public binanceExchange: ccxt.binance;
 
-  constructor(config: ConfigService) {
+  private appName = 'binance';
+
+  constructor(
+    @InjectRepository(Trade)
+    private tradesRepository: Repository<Trade>,
+    config: ConfigService,
+  ) {
     const binanceApiKey: string = config.get('BINANCE_API_KEY');
     const binanceSecret: string = config.get('BINANCE_API_SECRET');
     this.binanceExchange = new ccxt.binance({
@@ -23,8 +32,8 @@ export class BinanceService {
    * Get all current spot and flexible staking balance from Binance.
    * @returns A map of the current spot and flexible staking balance
    */
-  async getSpotAndFlexBalance(): Promise<any> {
-    const balances = {};
+  async getSpotAndFlexBalance(): Promise<Map<string, number>> {
+    const balances: Map<string, number> = new Map();
     const totalBalance = await this.binanceExchange.fetchTotalBalance();
     for (let asset in totalBalance) {
       if (Object.prototype.hasOwnProperty.call(totalBalance, asset)) {
@@ -66,6 +75,7 @@ export class BinanceService {
         break;
       }
     }
+    this.saveTradeHistory(history);
     return history;
   }
 
@@ -86,6 +96,28 @@ export class BinanceService {
       const history = await this.getMyTradeHistory(symbol, since, to, limit);
       allHistory = allHistory.concat(history);
     }
+    this.saveTradeHistory(allHistory);
     return allHistory;
+  }
+
+  /**
+   * Save a trade history to the database.
+   * @param history Trade history
+   */
+  private saveTradeHistory(history: ccxt.Trade[]) {
+    history.forEach(async (trade) => {
+      const tradeEntity = new Trade();
+      tradeEntity.app = this.appName;
+      tradeEntity.action = trade.side;
+      tradeEntity.date = new Date(trade.datetime);
+      tradeEntity.fee = trade.fee.cost;
+      tradeEntity.fee_currency = trade.fee.currency;
+      tradeEntity.price = trade.price;
+      tradeEntity.price_currency = trade.symbol.split('/')[1];
+      tradeEntity.quantity = trade.amount;
+      tradeEntity.symbol = trade.symbol;
+      const savedTradeEntity = await this.tradesRepository.save(tradeEntity);
+      return savedTradeEntity;
+    });
   }
 }

@@ -1,20 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ScheduleModule } from '@nestjs/schedule';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Trade } from 'src/trade/trade.entity';
 import { BinanceController } from './binance.controller';
 import { BinanceService } from './binance.service';
 
 @Module({
-  imports: [
-    // * * * * * *
-    // | | | | | |
-    // | | | | | day of week
-    // | | | | months
-    // | | | day of month
-    // | | hours
-    // | minutes
-    // seconds (optional)
-    ScheduleModule.forRoot(),
-  ],
+  imports: [TypeOrmModule.forFeature([Trade])],
   controllers: [BinanceController],
   providers: [BinanceService],
 })

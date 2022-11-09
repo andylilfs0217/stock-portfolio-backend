@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BinanceModule } from './binance/binance.module';
@@ -10,6 +12,26 @@ const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath, isGlobal: true }),
+    // * * * * * *
+    // | | | | | |
+    // | | | | | day of week
+    // | | | | months
+    // | | | day of month
+    // | | hours
+    // | minutes
+    // seconds (optional)
+    ScheduleModule.forRoot(),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'andy',
+      password: 'Andyli!!!0217',
+      database: 'stock_tracker',
+      entities: [],
+      synchronize: true,
+      autoLoadEntities: true,
+    }),
     BinanceModule,
   ],
   controllers: [AppController],
