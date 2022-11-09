@@ -27,4 +27,18 @@ export class BinanceService {
     }
     return balances;
   }
+
+  async getHistory(): Promise<any> {
+    const binanceApiKey: string = this.config.get('BINANCE_API_KEY');
+    const binanceSecret: string = this.config.get('BINANCE_API_SECRET');
+    const binanceExchange = new ccxt.binance({
+      apiKey: binanceApiKey,
+      secret: binanceSecret,
+    });
+    const symbol = 'BETH/ETH';
+    const since = binanceExchange.milliseconds() - 86400000 * 60;
+    const limit = 20;
+    const history = await binanceExchange.fetchMyTrades(symbol, since, limit);
+    return history;
+  }
 }

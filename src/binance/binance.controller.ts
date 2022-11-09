@@ -10,4 +10,10 @@ export class BinanceController {
     const res = await this.binanceService.getSpotAndFlexBalance();
     return res;
   }
+
+  @Get('history')
+  async getHistory(): Promise<any> {
+    const res = await this.binanceService.getHistory();
+    return res;
+  }
 }
