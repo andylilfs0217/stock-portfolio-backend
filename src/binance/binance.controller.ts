@@ -5,9 +5,9 @@ import { BinanceService } from './binance.service';
 export class BinanceController {
   constructor(private readonly binanceService: BinanceService) {}
 
-  @Get('spot')
-  getHello(): any {
-    const res = this.binanceService.getSpotBalance();
+  @Get('spot-and-flex')
+  async getSpotAndFlexBalance(): Promise<any> {
+    const res = await this.binanceService.getSpotAndFlexBalance();
     return res;
   }
 }

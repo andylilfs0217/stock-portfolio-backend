@@ -25,6 +25,7 @@
     "@nestjs/config": "^2.1.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "ccxt": "^2.1.48",
     "coinbase-pro-node": "^6.0.0",
     "dotenv": "^16.0.1",
     "node-binance-api": "^0.13.1",
