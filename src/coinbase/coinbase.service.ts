@@ -12,6 +12,7 @@ export class CoinbaseService {
   public coinbaseExchange: ccxt.binance;
 
   private appName = 'coinbase';
+  private PAGINATION_LIMIT = 300;
 
   constructor(
     @InjectRepository(Trade)
@@ -26,8 +27,40 @@ export class CoinbaseService {
     });
   }
 
+  /**
+   * Get the balance in coinbase
+   * @returns A map of coinbase balance
+   */
   async getBalance(): Promise<any> {
-    const balance = await this.coinbaseExchange.fetchBalance();
+    const balance = {};
+    const totalBalance = await this.coinbaseExchange.fetchTotalBalance({
+      limit: this.PAGINATION_LIMIT,
+    });
+    for (const symbol in totalBalance) {
+      if (Object.prototype.hasOwnProperty.call(totalBalance, symbol)) {
+        const amount = totalBalance[symbol];
+        if (amount > 0) {
+          balance[symbol] = amount;
+        }
+      }
+    }
     return balance;
+  }
+
+  async getTrades(): Promise<any> {
+    const allTrades = [];
+    const accounts = await this.coinbaseExchange.fetchAccounts({
+      limit: this.PAGINATION_LIMIT,
+    });
+    // const ledgers = await this.coinbaseExchange.fetchLedger({
+    //   account_id: 'edac72c5-cf98-5979-a085-20de5fd3578c',
+    // });
+    const buys = await this.coinbaseExchange.fetchMyBuys({
+      account_id: 'edac72c5-cf98-5979-a085-20de5fd3578c',
+    });
+    const sells = await this.coinbaseExchange.fetchMySells({
+      account_id: 'edac72c5-cf98-5979-a085-20de5fd3578c',
+    });
+    return allTrades;
   }
 }

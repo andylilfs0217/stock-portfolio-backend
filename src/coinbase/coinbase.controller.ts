@@ -10,4 +10,10 @@ export class CoinbaseController {
     const res = await this.coinbaseService.getBalance();
     return res;
   }
+
+  @Get('trades')
+  async getTrades(): Promise<any> {
+    const res = await this.coinbaseService.getTrades();
+    return res;
+  }
 }

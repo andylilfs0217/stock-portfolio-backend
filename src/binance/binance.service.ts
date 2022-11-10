@@ -32,8 +32,8 @@ export class BinanceService {
    * Get all current spot and flexible staking balance from Binance.
    * @returns A map of the current spot and flexible staking balance
    */
-  async getSpotAndFlexBalance(): Promise<Map<string, number>> {
-    const balances: Map<string, number> = new Map();
+  async getSpotAndFlexBalance(): Promise<any> {
+    const balances = {};
     const totalBalance = await this.binanceExchange.fetchTotalBalance();
     for (let asset in totalBalance) {
       if (Object.prototype.hasOwnProperty.call(totalBalance, asset)) {
