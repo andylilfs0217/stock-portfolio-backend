@@ -1,3 +1,4 @@
+import { CoinbaseModule } from './coinbase/coinbase.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -24,7 +25,7 @@ const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
-      port: 3306,
+      port: 13306,
       username: 'andy',
       password: 'Andyli!!!0217',
       database: 'stock_tracker',
@@ -32,6 +33,7 @@ const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
       synchronize: true,
       autoLoadEntities: true,
     }),
+    CoinbaseModule,
     BinanceModule,
   ],
   controllers: [AppController],
