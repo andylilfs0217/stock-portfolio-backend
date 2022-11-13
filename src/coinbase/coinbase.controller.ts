@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { CoinbaseService } from './coinbase.service';
 
 @Controller('coinbase')
@@ -12,8 +12,8 @@ export class CoinbaseController {
   }
 
   @Get('trades')
-  async getTrades(): Promise<any> {
-    const res = await this.coinbaseService.getTrades();
+  async getAllTrades(): Promise<any> {
+    const res = await this.coinbaseService.getAllTrades();
     return res;
   }
 }

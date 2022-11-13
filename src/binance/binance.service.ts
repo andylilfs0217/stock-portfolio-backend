@@ -4,7 +4,7 @@ import { Cron } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as ccxt from 'ccxt';
 import * as moment from 'moment';
-import { Trade } from 'src/trade/trade.entity';
+import { Trade, TradeAction } from 'src/trade/trade.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -92,32 +92,37 @@ export class BinanceService {
     const to = moment().valueOf();
     const limit = 100;
     let allHistory: ccxt.Trade[] = [];
-    for (const symbol of symbols) {
-      const history = await this.getMyTradeHistory(symbol, since, to, limit);
-      allHistory = allHistory.concat(history);
-    }
-    this.saveTradeHistory(allHistory);
-    return allHistory;
+    await Promise.all(
+      symbols.map(async (symbol) => {
+        const history = await this.getMyTradeHistory(symbol, since, to, limit);
+        allHistory = allHistory.concat(history);
+      }),
+    );
+    const savedTradeHistory = await this.saveTradeHistory(allHistory);
+    return savedTradeHistory;
   }
 
   /**
    * Save a trade history to the database.
    * @param history Trade history
    */
-  private saveTradeHistory(history: ccxt.Trade[]) {
-    history.forEach(async (trade) => {
-      const tradeEntity = new Trade();
-      tradeEntity.app = this.appName;
-      tradeEntity.action = trade.side;
-      tradeEntity.date = new Date(trade.datetime);
-      tradeEntity.fee = trade.fee.cost;
-      tradeEntity.fee_currency = trade.fee.currency;
-      tradeEntity.price = trade.price;
-      tradeEntity.price_currency = trade.symbol.split('/')[1];
-      tradeEntity.quantity = trade.amount;
-      tradeEntity.symbol = trade.symbol;
-      const savedTradeEntity = await this.tradesRepository.save(tradeEntity);
-      return savedTradeEntity;
-    });
+  private async saveTradeHistory(history: ccxt.Trade[]) {
+    const savedTradeHistory = await Promise.all(
+      history.map(async (trade) => {
+        const tradeEntity = new Trade();
+        tradeEntity.app = this.appName;
+        tradeEntity.action = TradeAction[trade.side];
+        tradeEntity.date = new Date(trade.datetime);
+        tradeEntity.fee = trade.fee.cost;
+        tradeEntity.fee_currency = trade.fee.currency;
+        tradeEntity.price = trade.price;
+        tradeEntity.price_currency = trade.symbol.split('/')[1];
+        tradeEntity.quantity = trade.amount;
+        tradeEntity.symbol = trade.symbol;
+        const savedTradeEntity = await this.tradesRepository.save(tradeEntity);
+        return savedTradeEntity;
+      }),
+    );
+    return savedTradeHistory;
   }
 }
