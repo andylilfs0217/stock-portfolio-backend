@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
 
 export enum TradeAction {
   BUY = 'buy',
@@ -6,13 +6,16 @@ export enum TradeAction {
 }
 
 @Entity()
+@Index(['app', 'tradeId'], { unique: true })
 export class Trade {
   @PrimaryGeneratedColumn({ comment: 'Unique ID of the trade' })
   id: number;
 
   @Column({ comment: 'The app of the trade' })
+  @Index()
   app: string;
 
+  @Index()
   @Column({
     type: 'enum',
     comment: 'Action of the trade',
@@ -21,13 +24,14 @@ export class Trade {
   action: TradeAction;
 
   @Column({ comment: 'Trade symbol' })
+  @Index()
   symbol: string;
 
   @Column({ type: 'double', comment: 'The traded price of the asset' })
   price: number;
 
   @Column({ comment: 'The traded price currency' })
-  price_currency: string;
+  priceCurrency: string;
 
   @Column({ type: 'double', comment: 'The amount of asset being traded' })
   quantity: number;
@@ -36,14 +40,16 @@ export class Trade {
   fee: number;
 
   @Column({ comment: 'The fee spent currency' })
-  fee_currency: string;
+  feeCurrency: string;
 
   @Column({ comment: 'The date time of the trade being executed' })
+  @Index()
   date: Date;
 
   @Column({ nullable: true, comment: 'Note of the trade' })
   note: string;
 
   @Column({ comment: 'Unique trade ID assigned by the app' })
-  trade_id: string;
+  @Index()
+  tradeId: string;
 }

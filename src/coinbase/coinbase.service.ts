@@ -130,15 +130,15 @@ export class CoinbaseService {
       trade.quantity = ledger.amount;
       trade.date = moment(ledger.datetime).toDate();
       trade.fee = 0;
-      trade.fee_currency = ledger.info.native_amount.currency;
+      trade.feeCurrency = ledger.info.native_amount.currency;
       trade.price =
         ledger.info.description === 'Earn Task'
           ? 0
           : Math.abs(
               parseFloat(ledger.info.native_amount.amount) / ledger.amount,
             );
-      trade.price_currency = ledger.info.native_amount.currency;
-      trade.trade_id = ledger.id;
+      trade.priceCurrency = ledger.info.native_amount.currency;
+      trade.tradeId = ledger.id;
       return trade;
     });
     allTrades = allTrades.concat(trades);

@@ -114,9 +114,9 @@ export class BinanceService {
         tradeEntity.action = TradeAction[trade.side];
         tradeEntity.date = new Date(trade.datetime);
         tradeEntity.fee = trade.fee.cost;
-        tradeEntity.fee_currency = trade.fee.currency;
+        tradeEntity.feeCurrency = trade.fee.currency;
         tradeEntity.price = trade.price;
-        tradeEntity.price_currency = trade.symbol.split('/')[1];
+        tradeEntity.priceCurrency = trade.symbol.split('/')[1];
         tradeEntity.quantity = trade.amount;
         tradeEntity.symbol = trade.symbol;
         const savedTradeEntity = await this.tradesRepository.save(tradeEntity);
