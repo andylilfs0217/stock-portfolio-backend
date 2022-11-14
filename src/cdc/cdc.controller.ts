@@ -10,12 +10,12 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { CdcService } from './cdc.service';
 
-@Controller()
+@Controller('cdc')
 export class CdcController {
   constructor(private readonly cdcService: CdcService) {}
 
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', { dest: './uploads' }))
   async uploadFile(
     @UploadedFile(
       new ParseFilePipe({

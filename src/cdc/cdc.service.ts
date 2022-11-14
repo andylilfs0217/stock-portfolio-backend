@@ -13,6 +13,6 @@ export class CdcService {
   ) {}
 
   async uploadFile(file: Express.Multer.File): Promise<any> {
-    throw new Error('Method not implemented.');
+    return;
   }
 }
