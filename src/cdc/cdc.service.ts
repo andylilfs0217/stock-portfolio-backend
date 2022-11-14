@@ -11,4 +11,8 @@ export class CdcService {
     @InjectRepository(Trade)
     private tradesRepository: Repository<Trade>,
   ) {}
+
+  async uploadFile(file: Express.Multer.File): Promise<any> {
+    throw new Error('Method not implemented.');
+  }
 }
