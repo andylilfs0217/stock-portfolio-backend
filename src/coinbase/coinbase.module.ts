@@ -3,7 +3,7 @@ import { CoinbaseService } from './coinbase.service';
 
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Trade } from 'src/trade/trade.entity';
+import { Trade } from 'src/entity/trade.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Trade])],

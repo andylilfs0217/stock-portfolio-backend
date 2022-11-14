@@ -4,7 +4,7 @@ import { Cron } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as ccxt from 'ccxt';
 import * as moment from 'moment';
-import { Trade, TradeAction } from 'src/trade/trade.entity';
+import { Trade, TradeAction } from 'src/entity/trade.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

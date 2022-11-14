@@ -4,7 +4,7 @@ import { Cron } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as ccxt from 'ccxt';
 import * as moment from 'moment';
-import { Trade, TradeAction } from 'src/trade/trade.entity';
+import { Trade, TradeAction } from 'src/entity/trade.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -152,7 +152,10 @@ export class CoinbaseService {
   private async saveTrades(trades: Trade[]) {
     const savedTrades = [];
     for (const trade of trades) {
-      const savedTradeEntity = await this.tradesRepository.save(trade);
+      const savedTradeEntity = await this.tradesRepository.upsert(trade, [
+        'app',
+        'tradeId',
+      ]);
       savedTrades.push(savedTradeEntity);
     }
     return savedTrades;

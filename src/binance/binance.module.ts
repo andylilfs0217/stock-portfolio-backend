@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Trade } from 'src/trade/trade.entity';
+import { Trade } from 'src/entity/trade.entity';
 import { BinanceController } from './binance.controller';
 import { BinanceService } from './binance.service';
 

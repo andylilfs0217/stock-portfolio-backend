@@ -1,3 +1,5 @@
+import { IbModule } from './ib/ib.module';
+import { IbService } from './ib/ib.service';
 import { CoinbaseModule } from './coinbase/coinbase.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -33,8 +35,9 @@ const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
       synchronize: true,
       autoLoadEntities: true,
     }),
-    CoinbaseModule,
     BinanceModule,
+    CoinbaseModule,
+    IbModule,
   ],
   controllers: [AppController],
   providers: [AppService],
