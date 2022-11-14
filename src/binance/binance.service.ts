@@ -119,6 +119,7 @@ export class BinanceService {
         tradeEntity.priceCurrency = trade.symbol.split('/')[1];
         tradeEntity.quantity = trade.amount;
         tradeEntity.symbol = trade.symbol;
+        tradeEntity.tradeId = trade.id;
         const savedTradeEntity = await this.tradesRepository.save(tradeEntity);
         return savedTradeEntity;
       }),
