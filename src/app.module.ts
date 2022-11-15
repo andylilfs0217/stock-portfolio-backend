@@ -1,3 +1,4 @@
+import { FutuModule } from './futu/futu.module';
 import { CdcModule } from './cdc/cdc.module';
 import { IbModule } from './ib/ib.module';
 import { CoinbaseModule } from './coinbase/coinbase.module';
@@ -38,6 +39,7 @@ const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
     BinanceModule,
     CdcModule,
     CoinbaseModule,
+    FutuModule,
     IbModule,
   ],
   controllers: [AppController],
