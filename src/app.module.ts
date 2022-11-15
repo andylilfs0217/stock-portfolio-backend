@@ -16,14 +16,6 @@ const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath, isGlobal: true }),
-    // * * * * * *
-    // | | | | | |
-    // | | | | | day of week
-    // | | | | months
-    // | | | day of month
-    // | | hours
-    // | minutes
-    // seconds (optional)
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
